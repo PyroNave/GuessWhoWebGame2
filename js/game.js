@@ -24,7 +24,14 @@ $.ajax({
         allPics.push(val);
       }
     });
-    setupGame();
+    if (allPics.length > 0) {
+      setupGame();
+    } else {
+      console.error("No images found in img/ directory");
+    }
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+    console.error("Error loading images: " + textStatus + " " + errorThrown);
   }
 });
 
