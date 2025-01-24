@@ -16,29 +16,24 @@ let rng = new Math.seedrandom(seed);
 var opponentCharacter;
 var allPics = [];
 
-fetch('./img/')
-  .then(response => response.text())
-  .then(data => {
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(data, 'text/html');
-    const links = htmlDoc.querySelectorAll('a');
-
-    links.forEach(link => {
-      const val = link.getAttribute('href');
+$.ajax({
+  url: './img/',
+  success: function (data) {
+    $(data).find('a').attr('href', function (i, val) {
       if (val.match(/\.(jpe?g|png|gif)$/)) {
         allPics.push(val);
       }
     });
-
     if (allPics.length > 0) {
       setupGame();
     } else {
       console.error("No images found in img/ directory");
     }
-  })
-  .catch(error => {
-    console.error("Error loading images: ", error);
-  });
+  },
+  error: function (jqXHR, textStatus, errorThrown) {
+    console.error("Error loading images: " + textStatus + " " + errorThrown);
+  }
+});
 
 var selectedPics = [];
 
